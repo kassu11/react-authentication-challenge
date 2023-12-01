@@ -56,10 +56,14 @@ export const api = {
 		}
 	},
 
-	// createPost: requiresAuth(async ({ postText }) => {
-	// 	const response = await axios.post("http://localhost:4000/posts", { postText });
-	// 	return response;
-	// }),
+	createGoal: requiresAuth(async ({ text }) => {
+		const response = await axios.post("http://localhost:5000/api/goals", { text });
+		return response;
+	}),
+	getGoals: requiresAuth(async () => {
+		const response = await axios.get("http://localhost:5000/api/goals");
+		return response;
+	}),
 	// getPosts: async () => {
 	// 	const response = await axios.get("http://localhost:4000/posts");
 	// 	return response;

@@ -1,29 +1,34 @@
 // components
+import { useContext, useEffect, useState } from "react";
 import GoalDetails from "../components/GoalDetails";
 import GoalForm from "../components/GoalForm";
-
-const goalsArray = [
-	{
-		text: "Learn a new programming language",
-		createdAt: new Date(2023, 11, 30),
-	},
-	{
-		text: "Complete a fitness challenge",
-		createdAt: new Date(2023, 11, 15),
-	},
-	{
-		text: "Read 10 books by the end of the year",
-		createdAt: new Date(2023, 10, 1),
-	},
-];
+import { AuthenticationContext } from "../components/AuthenticationControls";
+import { api } from "../api";
 
 const Home = () => {
+	const [authentication, setAuthentication] = useContext(AuthenticationContext);
+	const [goals, setGoals] = useState([]);
+
+	useEffect(() => {
+		const fetchGoals = async () => {
+			try {
+				const { status, data } = await api.getGoals();
+				console.log(data);
+				if (status === 200) setGoals(data);
+			} catch (err) {
+				console.error(err);
+			}
+		};
+
+		fetchGoals();
+	}, [authentication]);
+
 	return (
 		<div className="home">
 			<div className="goals">
-				<GoalDetails goal={goalsArray[0]} />
-				<GoalDetails goal={goalsArray[1]} />
-				<GoalDetails goal={goalsArray[2]} />
+				{goals.map((goal) => (
+					<GoalDetails goal={goal} key={goal._id} />
+				))}
 			</div>
 			<GoalForm />
 		</div>

@@ -48,7 +48,6 @@ const login = async (req, res) => {
 		const refreshToken = jwt.sign({ ...tokenUser, type: "refresh" }, process.env.REFRESH_TOKEN_SECRET);
 		await RefreshToken.deleteOne({ userId: user._id });
 		await RefreshToken.create({ userId: user._id, token: refreshToken });
-
 		if (rememberPassword) {
 			const today = new Date();
 			res.cookie("__refreshToken__", refreshToken, {
@@ -68,7 +67,16 @@ const login = async (req, res) => {
 // @route   GET /api/users/me
 // @access  Private
 const getMe = async (req, res, next) => {
-	
+	const userId = localStorage.getItem("userId");
+	try {
+		const currentUser = await User.findById(userId);
+		if (!currentUser) {
+			return res.status(404).json({ message: "User not found." });
+		}
+		res.status(200).json(currentUser);
+	} catch (err) {
+		res.status(404).json({ message: err.message });
+	}
 };
 
 module.exports = {

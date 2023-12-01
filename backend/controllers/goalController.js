@@ -5,13 +5,10 @@ const User = require("../models/userModel");
 // @route   GET /api/goals
 // @access  Private
 const getGoals = async (req, res, next) => {
-	const { name } = req.body;
+	const { userId: user } = req.user;
 	try {
-		const goals = await Goal.find({ user: name });
-		res.status(200).json({
-			success: true,
-			data: goals,
-		});
+		const goals = await Goal.find({ user });
+		res.status(200).json(goals);
 	} catch (err) {
 		next(err);
 	}
@@ -21,17 +18,12 @@ const getGoals = async (req, res, next) => {
 // @route   POST /api/goals
 // @access  Private
 const setGoal = async (req, res, next) => {
-	const { name, text } = req.body;
+	const { userId: user } = req.user;
+	const { text } = req.body;
 	try {
-		const user = await User.findOne({ name });
-		const goal = await new Goal({
-			text,
-			user: user._id,
-		});
-		res.status(201).json({
-			success: true,
-			data: goal,
-		});
+		const goal = await new Goal({ text, user });
+		goal.save();
+		res.status(201).json({ success: true, data: goal });
 	} catch (err) {
 		next(err);
 	}
