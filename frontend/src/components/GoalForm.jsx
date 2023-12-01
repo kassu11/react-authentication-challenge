@@ -1,12 +1,12 @@
 import { api } from "../api";
 import { useField } from "../hooks/useField";
 
-const GoalForm = () => {
+const GoalForm = ({ onUpdate }) => {
 	const text = useField("text");
 	const handleSubmit = async (event) => {
 		event.preventDefault();
-		console.log("???");
 		await api.createGoal({ text: text.value });
+		onUpdate((prev) => !prev);
 	};
 
 	return (

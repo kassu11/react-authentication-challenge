@@ -6,6 +6,7 @@ import { AuthenticationContext } from "../components/AuthenticationControls";
 import { api } from "../api";
 
 const Home = () => {
+	const [update, setUpdate] = useState(false);
 	const [authentication, setAuthentication] = useContext(AuthenticationContext);
 	const [goals, setGoals] = useState([]);
 
@@ -13,24 +14,24 @@ const Home = () => {
 		const fetchGoals = async () => {
 			try {
 				const { status, data } = await api.getGoals();
-				console.log(data);
 				if (status === 200) setGoals(data);
+				else setGoals([]);
 			} catch (err) {
 				console.error(err);
 			}
 		};
 
 		fetchGoals();
-	}, [authentication]);
+	}, [authentication, update]);
 
 	return (
 		<div className="home">
 			<div className="goals">
 				{goals.map((goal) => (
-					<GoalDetails goal={goal} key={goal._id} />
+					<GoalDetails goal={goal} key={goal._id} onUpdate={setUpdate} />
 				))}
 			</div>
-			<GoalForm />
+			<GoalForm onUpdate={setUpdate} />
 		</div>
 	);
 };

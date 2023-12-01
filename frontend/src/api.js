@@ -64,6 +64,10 @@ export const api = {
 		const response = await axios.get("http://localhost:5000/api/goals");
 		return response;
 	}),
+	removeGoal: requiresAuth(async (goalId) => {
+		const response = await axios.delete(`http://localhost:5000/api/goals/${goalId}`);
+		return response;
+	}),
 	// getPosts: async () => {
 	// 	const response = await axios.get("http://localhost:4000/posts");
 	// 	return response;

@@ -7,7 +7,7 @@ const User = require("../models/userModel");
 const getGoals = async (req, res, next) => {
 	const { userId: user } = req.user;
 	try {
-		const goals = await Goal.find({ user });
+		const goals = await Goal.find({ user }).sort({ createdAt: -1 });
 		res.status(200).json(goals);
 	} catch (err) {
 		next(err);
@@ -52,11 +52,8 @@ const updateGoal = async (req, res, next) => {
 const deleteGoal = async (req, res, next) => {
 	const { id } = req.params;
 	try {
-		const goal = await Goal.findByIddAndDelete(id);
-		res.status(200).json({
-			success: true,
-			data: goal,
-		});
+		const goal = await Goal.findByIdAndDelete(id);
+		res.status(200).json({ success: true, data: goal });
 		if (!goal) {
 			return next(new ErrorResponse("No goal found", 404));
 		}
