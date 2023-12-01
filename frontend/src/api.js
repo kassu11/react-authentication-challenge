@@ -19,7 +19,7 @@ export const api = {
 
 			return response;
 		} catch (err) {
-			console.error(err);
+			return err.response;
 		}
 	},
 	refreshToken: async () => {
@@ -44,7 +44,7 @@ export const api = {
 
 			return response;
 		} catch (err) {
-			console.error(err);
+			return err.response;
 		}
 	},
 	register: async ({ email, password, name }) => {
@@ -52,7 +52,7 @@ export const api = {
 			const response = await axios.post("http://localhost:5000/api/users/register", { email, password, name });
 			return response;
 		} catch (err) {
-			console.error(err);
+			return err.response;
 		}
 	},
 

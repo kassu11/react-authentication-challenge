@@ -6,6 +6,7 @@ export function useField(type) {
 	return {
 		type,
 		value,
-		onChange: (e) => setValue(e.target.value),
+		checked: value,
+		onChange: (e) => setValue(e.target.value || e.target.checked),
 	};
 }

@@ -1,11 +1,15 @@
+import { useContext } from "react";
 import { api } from "../api";
 import { useField } from "../hooks/useField";
+import { NotificationContext } from "./NotificationControls/NotificationControls";
 
 const GoalForm = ({ onUpdate }) => {
+	const [addNotification] = useContext(NotificationContext);
 	const text = useField("text");
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		await api.createGoal({ text: text.value });
+		addNotification({ type: "success", title: "Goal added", message: "Goal added successfully!", duration: 2500 });
 		onUpdate((prev) => !prev);
 	};
 
