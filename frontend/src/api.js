@@ -27,6 +27,8 @@ export const api = {
 			const response = await axios.post("http://localhost:5000/auth/refresh", { token: refreshToken }, { withCredentials: true });
 			axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.accessToken}`;
 			accessToken = response.data.accessToken;
+			const user = response.data.user;
+			localStorage.setItem("user", JSON.stringify(user));
 			return response;
 		} catch (err) {
 			console.log(err);

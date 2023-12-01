@@ -7,10 +7,10 @@ const RefreshToken = require("../models/refreshToken");
 const login = async (req, res) => {
 	const { email, password, rememberPassword } = req.body;
 	try {
-		const user = await User.findOne({ email }).populate("sensitiveData");
+		const user = await User.findOne({ email });
 		if (!user) return res.status(404).json({ message: `User ${email} not found.` });
 
-		const correctPassword = await bcrypt.compare(password, user.sensitiveData.password);
+		const correctPassword = await bcrypt.compare(password, user.password);
 		if (!correctPassword) return res.status(400).json({ message: "Invalid credentials.", isMatch: false });
 
 		const tokenUser = { userId: user._id, type: "login", email: user.email };

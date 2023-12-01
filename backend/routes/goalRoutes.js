@@ -4,15 +4,15 @@ const { protect } = require("../middleware/authMiddleware");
 const { getGoals, setGoal, updateGoal, deleteGoal } = require("../controllers/goalController");
 
 // Route for getting goals (GET /api/goals)
-router.route("/").get(protect, getGoals);
+router.get("/", protect, getGoals);
 
 // Route for creating a new goal (POST /api/goals)
-router.route("/").post(protect, setGoal);
+router.post("/", protect, setGoal);
 
 // Route for updating a goal by ID (PUT /api/goals/:id)
-router.route("/:id").put(protect, updateGoal);
+router.put("/:id", protect, updateGoal);
 
 // Route for deleting a goal by ID (DELETE /api/goals/:id)
-router.route("/:id").delete(protect, deleteGoal);
+router.delete("/:id", protect, deleteGoal);
 
 module.exports = router;

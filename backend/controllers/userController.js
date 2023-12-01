@@ -1,12 +1,12 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const User = require("../models/userModel");
+const RefreshToken = require("../models/refreshToken");
 
 // @desc    Register new user
 // @route   POST /api/users
 // @access  Public
 const registerUser = async (req, res, next) => {
-	console.log("??????");
 	const { name, email, password } = req.body;
 	if (!name || !email || !password) {
 		return res.status(400).json({ msg: "Please enter all fields" });
@@ -33,21 +33,21 @@ const registerUser = async (req, res, next) => {
 // @desc    Authenticate a user
 // @route   POST /api/users/login
 // @access  Public
-const loginUser = async (req, res, next) => {
-	const { name, password, rememberPassword } = req.body;
+const login = async (req, res) => {
+	const { email, password, rememberPassword } = req.body;
 	try {
-		const user = await User.findOne({ name });
-		if (!user) return res.status(404).json({ message: `User ${name} not found.` });
+		const user = await User.findOne({ email });
+		if (!user) return res.status(404).json({ message: `User ${email} not found.` });
 
 		const correctPassword = await bcrypt.compare(password, user.password);
 		if (!correctPassword) return res.status(400).json({ message: "Invalid credentials.", isMatch: false });
 
-		const tokenUser = { userId: user._id, type: "login", name: user.name };
+		const tokenUser = { userId: user._id, type: "login", email: user.email };
 
 		const accessToken = jwt.sign(tokenUser, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "20s" });
 		const refreshToken = jwt.sign({ ...tokenUser, type: "refresh" }, process.env.REFRESH_TOKEN_SECRET);
-		await refreshToken.deleteOne({ userId: user._id });
-		await refreshToken.create({ userId: user._id, token: refreshToken });
+		await RefreshToken.deleteOne({ userId: user._id });
+		await RefreshToken.create({ userId: user._id, token: refreshToken });
 
 		if (rememberPassword) {
 			const today = new Date();
@@ -67,10 +67,12 @@ const loginUser = async (req, res, next) => {
 // @desc    Get user data
 // @route   GET /api/users/me
 // @access  Private
-const getMe = async (req, res, next) => {};
+const getMe = async (req, res, next) => {
+	
+};
 
 module.exports = {
 	registerUser,
-	loginUser,
+	login,
 	getMe,
 };
