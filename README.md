@@ -1,7 +1,7 @@
 # Usage
 
 
-1. Rename the `.envexampl`e to `.env` and add your `MONGO_URI`
+1. Rename the `.envexample` to `.env` and add your `MONGO_URI`
 
 2. Install dependencies
 
