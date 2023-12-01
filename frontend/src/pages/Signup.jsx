@@ -1,36 +1,24 @@
-import { api } from "../api";
+import { useSignup } from "../hooks/useSignup";
 import { useField } from "../hooks/useField";
-import { NotificationContext } from "../components/NotificationControls/NotificationControls";
-import { useContext } from "react";
 
 const Signup = () => {
-	const name = useField("text");
-	const email = useField("email");
-	const password = useField("password");
-	const [addNotification] = useContext(NotificationContext);
-
-	const handleSubmit = async (event) => {
-		event.preventDefault();
-		try {
-			const response = await api.register({ name: name.value, email: email.value, password: password.value });
-			if (response.status === 401) {
-				return addNotification({ type: "error", title: "Login failed", message: "User with this email already exists" });
-			}
-			console.log(response);
-		} catch (err) {
-			console.error(err);
-		}
-	};
+	const [name] = useField("text");
+	const [email] = useField("email");
+	const [password] = useField("password");
+	const [passwordConfirm] = useField("password");
+	const signup = useSignup(name.value, email.value, password.value, passwordConfirm.value);
 
 	return (
-		<form className="signup" onSubmit={handleSubmit}>
+		<form className="signup" onSubmit={signup}>
 			<h3>Sign Up</h3>
-			<label>Name:</label>
-			<input {...name} />
-			<label>Email address:</label>
-			<input {...email} />
-			<label>Password:</label>
-			<input {...password} />
+			<label htmlFor="name">Name:</label>
+			<input id="name" {...name} />
+			<label htmlFor="email">Email address:</label>
+			<input id="email" {...email} />
+			<label htmlFor="password">Password:</label>
+			<input id="password" {...password} />
+			<label htmlFor="password">Confirm password:</label>
+			<input id="password" {...passwordConfirm} />
 
 			<button>Sign up</button>
 		</form>

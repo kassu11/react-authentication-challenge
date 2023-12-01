@@ -48,6 +48,7 @@ const login = async (req, res) => {
 		const refreshToken = jwt.sign({ ...tokenUser, type: "refresh" }, process.env.REFRESH_TOKEN_SECRET);
 		await RefreshToken.deleteOne({ userId: user._id });
 		await RefreshToken.create({ userId: user._id, token: refreshToken });
+
 		if (rememberPassword) {
 			const today = new Date();
 			res.cookie("__refreshToken__", refreshToken, {
@@ -62,7 +63,6 @@ const login = async (req, res) => {
 		res.status(404).json({ message: err.message });
 	}
 };
-
 // @desc    Get user data
 // @route   GET /api/users/me
 // @access  Private
@@ -79,8 +79,20 @@ const getMe = async (req, res, next) => {
 	}
 };
 
+const logout = async (req, res) => {
+	const refreshToken = req.body?.token || req.cookies?.__refreshToken__;
+	if (!refreshToken) return res.sendStatus(401);
+	try {
+		await RefreshToken.deleteOne({ token: refreshToken });
+		res.sendStatus(200);
+	} catch (err) {
+		res.status(404).json({ message: err.message });
+	}
+};
+
 module.exports = {
 	registerUser,
 	login,
 	getMe,
+	logout,
 };

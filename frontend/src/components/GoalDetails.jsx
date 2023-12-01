@@ -5,7 +5,6 @@ import { api } from "../api";
 const GoalDetails = ({ goal, onUpdate }) => {
 	const handleDelete = async () => {
 		try {
-			console.log("????");
 			await api.removeGoal(goal._id);
 			onUpdate((prev) => !prev);
 		} catch (err) {

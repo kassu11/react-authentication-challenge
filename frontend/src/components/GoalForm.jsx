@@ -5,11 +5,12 @@ import { NotificationContext } from "./NotificationControls/NotificationControls
 
 const GoalForm = ({ onUpdate }) => {
 	const [addNotification] = useContext(NotificationContext);
-	const text = useField("text");
+	const [text, setText] = useField("text");
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		await api.createGoal({ text: text.value });
 		addNotification({ type: "success", title: "Goal added", message: "Goal added successfully!", duration: 2500 });
+		setText("");
 		onUpdate((prev) => !prev);
 	};
 

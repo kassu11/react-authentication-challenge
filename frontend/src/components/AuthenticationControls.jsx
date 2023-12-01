@@ -16,7 +16,6 @@ export default function AuthenticationControls(props) {
 				const { data } = await api.refreshToken();
 				if (!data?.accessToken) return;
 				authentication.isAuthenticated = true;
-
 				Object.assign(authentication, data);
 				setAuthentication({ ...authentication });
 			} catch (err) {}

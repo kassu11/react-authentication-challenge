@@ -6,9 +6,8 @@ let accessToken = "";
 export const api = {
 	login: async ({ password, email, rememberPassword }) => {
 		try {
-			console.log(email);
 			const response = await axios.post(
-				"http://localhost:5000/auth/login",
+				"http://localhost:5000/api/users/login",
 				{ password, email, rememberPassword },
 				{ withCredentials: true }
 			);
@@ -31,13 +30,12 @@ export const api = {
 			localStorage.setItem("user", JSON.stringify(user));
 			return response;
 		} catch (err) {
-			console.log(err);
 			return err.response;
 		}
 	},
 	logout: async () => {
 		try {
-			const response = await axios.post("http://localhost:5000/auth/logout", { token: refreshToken }, { withCredentials: true });
+			const response = await axios.post("http://localhost:5000/api/users/logout", { token: refreshToken }, { withCredentials: true });
 			delete axios.defaults.headers.common["Authorization"];
 			accessToken = "";
 			refreshToken = "";

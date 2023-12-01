@@ -20,7 +20,7 @@ function App() {
 				<div className="pages">
 					<Routes>
 						<Route path="/" element={authentication.isAuthenticated ? <Home /> : <Navigate to="/login" />} />
-						<Route path="/login" element={<Login />} />
+						<Route path="/login" element={!authentication.isAuthenticated ? <Login /> : <Navigate to="/" />} />
 						<Route path="/signup" element={<Signup />} />
 					</Routes>
 				</div>
